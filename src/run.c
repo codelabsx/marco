@@ -86,5 +86,30 @@ static int uv__run_pending(uv_loop_t* loop) {
     QUEUE* q;
     QUEUE pq;
 
-    uv_io_t
+    uv_io_t* w;
+    
+    if (QUEUE_EMPTY(&pq)) {return 0;}
+    
+    QUEUE_REMOVE(&loop->pending_queue, &pq);
+    
+    //遍历pq队列
+    while (!QUEUE_EMPTY(&pq)) {
+        //取出当前需要处理的节点移除队列
+        q = QUEUE_HEAD(&pq);
+        //将当前需要处理的节点移除队列
+        QUEUE_REMOVE(q);
+
+        //重置一下prev和next指针
+        QUEUE_INIT(q);
+
+        w = QUEUE_DATA(q, uv__io_t, pending_queue);
+
+        //执行回调
+        w->cb(loop, w, POLLOUT);
+    }
+}
+
+
+void close(uv_handle_t* handle, uv_close_cb close_cb) {
+    //正在关闭, 但是还没有执行回调
 }
