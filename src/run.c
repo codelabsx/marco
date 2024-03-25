@@ -47,6 +47,7 @@ void uv_run_idle(uv_loop_t* loop) {
     QUEUE* q;
 
     //1. 首先将队列中的handles, 取下来放到队列中
+    //防止回调导致出现死循环
     QUEUE_MOVE(&loop->idle_handles, &queue);
 
     //2. queue已经是将我们的handles给移进去了
@@ -57,12 +58,33 @@ void uv_run_idle(uv_loop_t* loop) {
         //4. 取得改节点对应整个结构体的基地址, 通过结构体成员取得结构体的首地址
         h = QUEUE_DATA(q, uv_idle_t, queue);
 
+        //5. 将这个节点从队列queue中移除
         QUEUE_REMOVE(q);
 
-        //c
+        //直接插入原来的队列
+        QUEUE_INSERT_TAIL(&loop—>idle_handles, q);
+
+        //执行回调函数
+        h->idle_cb(h);
     }
 }
 
-int uv_idle_stop() {
+
+int uv_idle_stop(uv_idle_t* handle) {
+    if (!uv__is_active(handle)) return 0;
+
+    //把handle从idle队列中移除, 但是还是挂载到handle_queue中
+    QUEUE_REMOVE(&handle->queue);
     
+    //将handle_stop
+    uv__handle_stop(handle);
+
+    return 0;
+}
+
+static int uv__run_pending(uv_loop_t* loop) {
+    QUEUE* q;
+    QUEUE pq;
+
+    uv_io_t
 }
