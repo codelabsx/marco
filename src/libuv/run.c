@@ -35,7 +35,6 @@ int uv_run(uv_loop_t* loop, uv_run_mode mode) {
     }
 
 }
-
 static int uv__loop_alive(const uv_loop_t* loop) {
     return uv_has_active_handles(loop) 
             || uv_has_active_reqs(loop) 
