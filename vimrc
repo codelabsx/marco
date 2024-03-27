@@ -1,5 +1,6 @@
+"wyz's的vim 配置
 set nu
--------
+
 " 设置字体
 set guifont=Monaco:h10
 

@@ -7,7 +7,7 @@ int uv_run(uv_loop_t* loop, uv_run_mode mode) {
         //更新当前时间, 因为我们可能提交定时任务: setTimeout(() => {}, 1000);
         uv_update_time(loop);
 
-        //执行定时器回调, ()=>{}
+        //执行定时器回调, setTime(()=>{}, 100s);
         uv_run_timers(loop);
 
         //执行padding
@@ -37,7 +37,9 @@ int uv_run(uv_loop_t* loop, uv_run_mode mode) {
 }
 
 static int uv__loop_alive(const uv_loop_t* loop) {
-    return uv_has_active_handles(loop) || uv_has_active_reqs(loop) || loop->closing_handles != NULL;
+    return uv_has_active_handles(loop) 
+            || uv_has_active_reqs(loop) 
+            || loop->closing_handles != NULL;
 }
 
 
