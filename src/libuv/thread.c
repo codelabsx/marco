@@ -1,14 +1,5 @@
-#include <pthread.h>
-#include <stdio.h>
-
-void* start(void* args)
-{
-
+int uv_async_init(uv_loop_t* loop, uv_async_t* handle, uv_async_cb async_cb) {
+    v__async_start(loop); 
 }
 
-int main()
-{
-    pthread_t thread_id;
-    pthread_create(&thread_id, NULL, start, NULL);
-    pthread_join(thread_id);
-}
+int uv__async_start(uv_loop_t loop);
